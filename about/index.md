@@ -3,7 +3,7 @@ title: About
 author: Evan Hahn
 layout: page
 ---
-I'm Evan Hahn, and my entire existence can be distilled down into four bullet points.
+我是石敏, 我所有的经历可以总结如下.
 
 * I am a software developer at [Braintree](https://www.braintreepayments.com/).
 * I have a Computer Science degree from the [University of Michigan](http://www.eecs.umich.edu/cse/).
