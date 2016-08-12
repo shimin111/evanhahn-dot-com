@@ -1,10 +1,12 @@
-url: http://evanhahn.com
-name: Evan Hahn
+url: http://shimin111.github.io
+name: Shi Min
 description: I'm a talking slime ball who can write code
 timezone: America/Los_Angeles
 future: false
 lsi: false
 permalink: :title
-markdown: redcarpet
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
 paginate: 5
 gems: [jekyll-paginate]

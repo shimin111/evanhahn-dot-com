@@ -1,15 +1,14 @@
 ---
 title: About
-author: Evan Hahn
+author: Shi Min
 layout: page
 ---
 我是石敏, 我所有的经历可以总结如下.
 
-* I am a software developer at [Braintree](https://www.braintreepayments.com/).
-* I have a Computer Science degree from the [University of Michigan](http://www.eecs.umich.edu/cse/).
-* I've written [a programming book about Express.js](https://www.manning.com/books/express-in-action?a_bid=fe3fcff7&a_aid=express-in-action).
-* I try to wear wacky socks as much as possible.
+* 我毕业于[武汉理工大学](http://www.whut.edu.cn/2015web/index.htm)。
+* 我有一个工学学士学位，并在攻读硕士研究生。
+* 我完成这个博客是利用了[Evan Hahn](http://www.evanhahn.com)的成果。
+* 我很喜欢Evan Hahn的网站的这种风格。
+* 目前，我的网站还有很多需要完善的地方。
 
-If you'd like, take a look at [my projects](/projects) to get a better idea of the kind of things I've made. Spoilers: it's mostly JavaScript and various open-source libraries. I know JavaScript and the web stack best, but I've been able to embarrass myself in other things too.
-
-Hit me up on [email](mailto:me@evanhahn.com), [Twitter](https://twitter.com/EvanHahn) or [GitHub](https://github.com/EvanHahn).
+我会不定期在博客里分享我的一些随笔。如果大家喜欢这种风格博客，可以参考我的博文来自己设置属于自己的个人网站，希望大家玩的开心！

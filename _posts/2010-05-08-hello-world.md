@@ -1,6 +1,6 @@
 ---
-title: And the blog begins
+title: 第一篇博文
 layout: post
 permalink: /hello-world/
 ---
-Here is my blog. I do hope you enjoy it.
+这就是我的第一篇博文，希望你们喜欢它。
