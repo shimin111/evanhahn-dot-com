@@ -229,6 +229,42 @@ footer {
   line-height: 1.5em;
 }
 
+/* catalog css */
+.catalog {
+  display: block;
+  margin-bottom: 1em;
+}
+
+.catalog header {
+  display: block;
+  margin-bottom: 1em;
+  padding: 1em 20px;
+  border-bottom: 1px dashed #999;
+}
+
+.catalog header h1 {
+  font-size: 22pt;
+  font-weight: 900;
+}
+
+.catalog header a {
+  border-bottom: 0;
+  color: black;
+}
+
+.catalog header a:hover{
+    color: #902;
+    border-bottom: 1px solid #902;
+}
+.catalog header time {
+  margin-top: .5em;
+  display: block;
+  font-size: 16px;
+  text-transform: uppercase;
+  color: #999;
+}
+
+
 /* Big screen */
 
 @media screen and (min-width: 700px) {
