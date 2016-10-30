@@ -56,11 +56,9 @@ permalink: /how-to-build-a-blog-website-ealiy-(2)/
     $ ruby setup.rb
 
 等待安装完毕就可以了。  
-3. 安装[RubyGems](https://rubygems.org/pages/download)
+3. 安装jekyll
 
-建议下载ZIP格式，解压到合适的文件夹中，在文件夹中打开cmd(shift+鼠标右键，在此处打开命令窗口)，输入命令：
-
-    $ ruby setup.rb
+    $ gem install jekyll
 
 等待安装完毕就可以了。  
 4. 安装jekyll-paginate
