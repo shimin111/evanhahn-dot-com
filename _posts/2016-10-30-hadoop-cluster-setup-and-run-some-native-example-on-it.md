@@ -1,8 +1,7 @@
 ---
-title:Hadoop集群配置以及运行官方提供的例子
-layout:post
-permalink:/hadoop-cluster-setup-and-run-some-native-example-on-it/
----
+title: Hadoop集群配置以及运行官方示例
+layout: post
+permalink: /hadoop-setup-and-run-some-native-example-on-it/
 这篇博客的主要内容是配置hadoop集群以及在hadoop集群上运行官方提供的一些程序，主要目的是hadoop入门。由于本人在配置过程中遇到了坑，所有觉得有必要提醒后来者。我的安装环境是ubuntu server 16.04。下面分为两个部分：1.hadoop集群搭建；2.运行官方提供的例子程序。
 # Hadoop集群搭建
 ## 安装java
