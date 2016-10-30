@@ -18,7 +18,7 @@ JAVA环境是必需的，自己安装没问题，只要注意设置豪环境变�
 
     $ hostname
 
-就可以看到
+就可以看到。
 在master节点上，使用下面的命令下载并且安装Hadoop（注意我讲Hadoop下载并且安装在`/usr/local/hadoop/`，可以自行选择合适的目录）
 
     $ cd /usr/local/
