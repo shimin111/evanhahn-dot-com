@@ -182,6 +182,6 @@ WordCount是hadoop官方提供的示例程序，我在网上找到一份中文�
 ## PI计算
 PI计算同理，但是PI计算不需要准备输入文件，命令如下：
 
-    $ bin/hadoop share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.3.jar pi 100 10000
+    $ bin/hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.3.jar pi 100 10000
 
 命令执行完毕即可看到模拟的圆周率,上述命令表明有100个Map作业，每个作业有10000个抽样。
