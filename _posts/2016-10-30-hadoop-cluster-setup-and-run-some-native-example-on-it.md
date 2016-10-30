@@ -12,11 +12,13 @@ JAVA环境是必需的，自己安装没问题，只要注意设置豪环境变�
 
 ## 安装hadoop
 
-> 在安装hadoop前，我的vmware虚拟机中已有三台ubuntu server的主机，且主机名分别为ubuntu1，ubuntu2，ubuntu3。三台机器在同一个子网内，相互可以ping通（最好关闭主机的防火墙），三台机子的ip地址分别为192.168.64.128，192.168.64.129，192.168.64.130   
+> 在安装hadoop前，我的vmware虚拟机中已有三台ubuntu server的主机，且主机名分别为ubuntu1，ubuntu2，ubuntu3。三台机器在同一个子网内，相互可以ping通（最好关闭主机的防火墙），三台机子的ip地址分别为192.168.64.128，192.168.64.129，192.168.64.130  
+
 主机名可以自己修改，在root权限下修改`/etc/hostname`即可。输入命令：
 
     $ hostname
 
+就可以看到
 在master节点上，使用下面的命令下载并且安装Hadoop（注意我讲Hadoop下载并且安装在`/usr/local/hadoop/`，可以自行选择合适的目录）
 
     $ cd /usr/local/
@@ -37,7 +39,7 @@ JAVA环境是必需的，自己安装没问题，只要注意设置豪环境变�
         </property>
         <property>
                 <name>hadoop.tmp.dir</name>
-                <value>/usr/local/hadoop/tmp</value>
+                <value>/usr/local/hadoop/hadoop-2.7.3/tmp</value>
         </property>
     </configuration>
 
@@ -46,12 +48,12 @@ JAVA环境是必需的，自己安装没问题，只要注意设置豪环境变�
     <configuration>
         <property>
                 <name>dfs.datanode.data.dir</name>
-                <value>/usr/local/hadoop/dfs/data</value>
+                <value>/usr/local/hadoop/hadoop-2.7.3/dfs/data</value>
                 <final>true</final>
         </property>
         <property>
                 <name>dfs.namenode.name.dir</name>
-                <value>/usr/local/hadoop/dfs/name</value>
+                <value>/usr/local/hadoop/hadoop-2.7.3/dfs/name</value>
                 <final>true</final>
         </property>
         <property>
