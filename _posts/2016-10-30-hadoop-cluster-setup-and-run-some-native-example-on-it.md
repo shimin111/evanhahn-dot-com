@@ -4,10 +4,14 @@ layout: post
 permalink: /hadoop-setup-and-run-some-native-example-on-it/
 ---
 这篇博客的主要内容是配置hadoop集群以及在hadoop集群上运行官方提供的一些程序，主要目的是hadoop入门。由于本人在配置过程中遇到了坑，所有觉得有必要提醒后来者。我的安装环境是ubuntu server 16.04。下面分为两个部分：1.hadoop集群搭建；2.运行官方提供的例子程序。
+
 # Hadoop集群搭建
+
 ## 安装java
 JAVA环境是必需的，自己安装没问题，只要注意设置豪环境变量就可以。可以参考[java环境安装](http://www.jianshu.com/p/6c308f184b61)
+
 ## 安装hadoop
+
 > 在安装hadoop前，我的vmware虚拟机中已有三台ubuntu server的主机，且主机名分别为ubuntu1，ubuntu2，ubuntu3。三台机器在同一个子网内，相互可以ping通（最好关闭主机的防火墙），三台机子的ip地址分别为192.168.64.128，192.168.64.129，192.168.64.130   
 
 主机名可以自己修改，在root权限下修改`/etc/hostname`即可。输入命令
@@ -20,6 +24,7 @@ JAVA环境是必需的，自己安装没问题，只要注意设置豪环境变�
     $ tar -zxvf hadoop-2.7.3.tar.gz
     $ rm hadoop-2.7.3.tar.gz
     $ cd hadoop-2.7.3
+
 ## 配置hadoop集群文件
 配置文件在`/usr/local/hadoop/hadoop-2.7.3/etc/hadoop/`目录下。
 打开并修改`core-site.xml`文件并修改如下：
@@ -59,6 +64,7 @@ JAVA环境是必需的，自己安装没问题，只要注意设置豪环境变�
     </configuration>
 打开`hadoop-env.sh`文件并设置`JAVA_HOME`，将`jdk`的安装路径导入，命令如下：
     export JAVA_HOME=/usr/lib/jvm/java-7-oracle    (就是上文中java的安装位置)
+
 ## 配置hosts
 接下来一步很关键，我自己在配置的时候，就是这一步出现了问题，在`ROOT`权限`/etc/host`配置主机名-ip映射。
     $ sudo vim /etc/hosts
@@ -91,12 +97,14 @@ JAVA环境是必需的，自己安装没问题，只要注意设置豪环境变�
     ubuntu2
     ubuntu3
 保存并退出。
+
 ## 在slave主机安装Hadoop
 在master主机（即ubuntu1）输入以下命令，将配置好的hadoop分发给其余的两个主机ubuntu2和ubuntu3。
     $ cd /usr/local/hadoop/
     $ scp -r hadoop-2.7.3 ubuntu2:/usr/local/hadoop/
     $ scp -r hadoop-2.7.3 ubuntu3:/usr/local/hadoop/
 至此集群的基本工作完成。
+
 ##Format Master上的Namenode以及启动hadoop服务
 输入以下命令，format master上的nanenode:
     $ cd /usr/local/hadoop/hadoop-2.7.3/
@@ -107,7 +115,9 @@ JAVA环境是必需的，自己安装没问题，只要注意设置豪环境变�
 关闭所有的进程并退出可以输入命令：
     $ sbin/stop-all.sh
 关闭所有的进程。
+
 # 运行官方提供的示例程序
+
 ## Word Count
 WordCount是hadoop官方提供的示例程序，我在网上找到一份中文的文档，里面有源码的解读，可参考[mapred-tutorial](http://hadoop.apache.org/docs/r1.0.4/cn/mapred_tutorial.html)。在这里可以了解以下map-reduce的原理和机制。
 运行官方的例子则相对简单，在我们下载的hadoop包里，即目录`/usr/local/hadoop/hadooop-2.7.3/share/hadoop/mapreduce/`有一个jar包`hadoop-mapreduce-examples-2.7.3.jar`打包的就是官方的示例，可以直接提交给hadoop集群运行。
