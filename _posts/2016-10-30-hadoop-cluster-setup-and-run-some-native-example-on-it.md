@@ -127,7 +127,7 @@ JAVA环境是必需的，自己安装没问题，只要注意设置豪环境变�
 
 至此集群的基本工作完成。
 
-##Format Master上的Namenode以及启动hadoop服务
+## Format Master上的Namenode以及启动hadoop服务
 输入以下命令，format master上的nanenode:
 
     $ cd /usr/local/hadoop/hadoop-2.7.3/
