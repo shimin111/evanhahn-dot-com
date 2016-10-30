@@ -30,7 +30,7 @@ JAVA环境是必需的，自己安装没问题，只要注意设置豪环境变�
         </property>
         <property>
                 <name>hadoop.tmp.dir</name>
-                <value>/usr/local/hadoop/hadoop-2.7.3/tmp</value>
+                <value>/usr/local/hadoop/tmp</value>
         </property>
     </configuration>
 打开`hdfs-site.xml`文件并修改如下：
