@@ -3,7 +3,6 @@ title: About
 author: Shi Min
 layout: page
 ---
-我是石敏, 我所有的经历可以总结如下.
 
 * 我毕业于[武汉理工大学](http://www.whut.edu.cn/2015web/index.htm)。
 * 我有一个工学学士学位，并在攻读硕士研究生。
