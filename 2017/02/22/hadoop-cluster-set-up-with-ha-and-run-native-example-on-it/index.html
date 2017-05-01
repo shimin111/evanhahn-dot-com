@@ -1,0 +1,858 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="hadoop," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="这篇博客的主要内容是配置hadoop HA集群以及在hadoop集群上运行官方提供的一些程序，主要目的是hadoop入门。由于本人在配置过程中遇到了坑，所有觉得有必要提醒后来者。我的安装环境是ubuntu server 16.04。下面分为两个部分：1.hadoop集群搭建；2.运行官方提供的例子程序。">
+<meta name="keywords" content="hadoop">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hadoop HA集群配置以及运行官方示例">
+<meta property="og:url" content="https://shminjs.github.io/2017/02/22/hadoop-cluster-set-up-with-ha-and-run-native-example-on-it/index.html">
+<meta property="og:site_name" content="shimin's blog">
+<meta property="og:description" content="这篇博客的主要内容是配置hadoop HA集群以及在hadoop集群上运行官方提供的一些程序，主要目的是hadoop入门。由于本人在配置过程中遇到了坑，所有觉得有必要提醒后来者。我的安装环境是ubuntu server 16.04。下面分为两个部分：1.hadoop集群搭建；2.运行官方提供的例子程序。">
+<meta property="og:updated_time" content="2017-05-01T12:57:34.433Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hadoop HA集群配置以及运行官方示例">
+<meta name="twitter:description" content="这篇博客的主要内容是配置hadoop HA集群以及在hadoop集群上运行官方提供的一些程序，主要目的是hadoop入门。由于本人在配置过程中遇到了坑，所有觉得有必要提醒后来者。我的安装环境是ubuntu server 16.04。下面分为两个部分：1.hadoop集群搭建；2.运行官方提供的例子程序。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://shminjs.github.io/2017/02/22/hadoop-cluster-set-up-with-ha-and-run-native-example-on-it/"/>
+
+
+
+
+
+  <title>Hadoop HA集群配置以及运行官方示例 | shimin's blog</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">shimin's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-首页"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://shminjs.github.io/2017/02/22/hadoop-cluster-set-up-with-ha-and-run-native-example-on-it/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="shimin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shimin's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Hadoop HA集群配置以及运行官方示例
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-22T00:00:00+08:00">
+                2017-02-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/02/22/hadoop-cluster-set-up-with-ha-and-run-native-example-on-it/" class="leancloud_visitors" data-flag-title="Hadoop HA集群配置以及运行官方示例">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这篇博客的主要内容是配置hadoop HA集群以及在hadoop集群上运行官方提供的一些程序，主要目的是hadoop入门。由于本人在配置过程中遇到了坑，所有觉得有必要提醒后来者。我的安装环境是ubuntu server 16.04。下面分为两个部分：1.hadoop集群搭建；2.运行官方提供的例子程序。</p>
+<a id="more"></a>
+<h1 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h1><blockquote>
+<p>ubuntu server 16.04 TLS</p>
+<p>ubuntu: 192.168.64.137</p>
+<p>ubuntu1: 192.168.64.138</p>
+<p>ubuntu2: 192.168.64.139</p>
+<p>hadoop: hadoop-2.7.3.tar.gz</p>
+</blockquote>
+<p><strong>NOTE</strong>：主机名和IP可以自行对应。</p>
+<h1 id="安装java"><a href="#安装java" class="headerlink" title="安装java"></a>安装java</h1><p>Java环境是必须的，可以参考<a href="http://www.webupd8.org/2012/09/install-oracle-java-8-in-ubuntu-via-ppa.html" target="_blank" rel="external">这篇博客</a>通过ppa方式安装java，这样子java就安装好了，而且不需要设置环境变量。一般来说，其路径是<code>/usr/lib/jvm/</code>(主要是有些软件里必须指令其路径)。</p>
+<h1 id="主机间免密码登录"><a href="#主机间免密码登录" class="headerlink" title="主机间免密码登录"></a>主机间免密码登录</h1><p>可参考<a href="http://blog.csdn.net/lisuo1234/article/details/52249572" target="_blank" rel="external">博客</a>设置。</p>
+<h1 id="zookeeper安装"><a href="#zookeeper安装" class="headerlink" title="zookeeper安装"></a>zookeeper安装</h1><p>可参考<a href="http://zookeeper.apache.org/doc/trunk/zookeeperStarted.html" target="_blank" rel="external">官方</a>设置</p>
+<h1 id="安装hadoop"><a href="#安装hadoop" class="headerlink" title="安装hadoop"></a>安装hadoop</h1><p>以主机名为ubuntu的主机为例，首先下载hadoop，并且将解压后的目录移到<code>/usr/local/</code>目录下：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ cd</div><div class="line">$ wget www-eu.apache.org/dist/hadoop/common/hadoop-<span class="number">2.7</span>.<span class="number">3</span>/hadoop-<span class="number">2.7</span>.<span class="number">3</span>.tar.gz</div><div class="line">$ tar zxvf hadoop-<span class="number">2.7</span>.<span class="number">3</span>.tar.gz</div><div class="line">$ sudo mv hadoop-<span class="number">2.7</span>.<span class="number">3</span> /usr/local/</div><div class="line"><span class="comment"># hadoop-2.7.3.tar.gz文件暂时不删，使用scp命令拷贝到其它两个主机。其它两个主机按照相同的方式解压和已送至相应的目录。</span></div></pre></td></tr></table></figure>
+<h1 id="配置hadoop-hdfs相关集群文件"><a href="#配置hadoop-hdfs相关集群文件" class="headerlink" title="配置hadoop-hdfs相关集群文件"></a>配置hadoop-hdfs相关集群文件</h1><p>配置文件都在<code>/usr/local/hadoop-2.7.3/etc/hadoop</code>目录下。</p>
+<p>首先修改<code>hadoop-env.sh</code>，替换<code>JAVA_HOME</code>配置，修改为：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">export JAVA_HOME=/usr/lib/jvm/java-<span class="number">8</span>-oracle</div></pre></td></tr></table></figure>
+<p>接着修改<code>hdfs-site.xml</code>文件(此配置是参考官方的配置)：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.nameservices<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">value</span>&gt;</span>act-cluster<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">          <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.ha.namenodes.act-cluster<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">value</span>&gt;</span>nn1,nn2<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">          <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.rpc-address.act-cluster.nn1<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">value</span>&gt;</span>ubuntu:8020<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">          <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.rpc-address.act-cluster.nn2<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">value</span>&gt;</span>ubuntu1:8020<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">          <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.http-address.act-cluster.nn1<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">value</span>&gt;</span>ubuntu:50070<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">          <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.http-address.act-cluster.nn2<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">value</span>&gt;</span>ubuntu1:50070<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">          <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.shared.edits.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">value</span>&gt;</span>qjournal://ubuntu:8485;ubuntu1:8485;ubuntu2:8485/act-cluster<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">          <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.client.failover.proxy.provider.act-cluster<span class="tag">&lt;/<span class="name">name</span>&gt;</span>            		<span class="tag">&lt;<span class="name">value</span>&gt;</span>org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">          <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.ha.fencing.methods<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">value</span>&gt;</span>sshfence<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">          <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.ha.fencing.ssh.private-key-files<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">value</span>&gt;</span>/home/shimin/.ssh/id_rsa<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">          <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.journalnode.edits.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">value</span>&gt;</span>/home/shimin/jn<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">          <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.ha.automatic-failover.enabled<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">          <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>修改<code>core-site.xml</code>文件：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">name</span>&gt;</span>fs.defaultFS<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">value</span>&gt;</span>hdfs://act-cluster<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">          <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">name</span>&gt;</span>ha.zookeeper.quorum<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">value</span>&gt;</span>ubuntu:2181,ubuntu1:2181,ubuntu2:2181<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">          <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">          <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">name</span>&gt;</span>hadoop.tmp.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">                  <span class="tag">&lt;<span class="name">value</span>&gt;</span>/usr/local/hadoop-2.7.3/tmp<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">          <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>配置<code>slaves</code>文件为：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">ubuntu</div><div class="line">ubuntu1</div><div class="line">ubuntu2</div></pre></td></tr></table></figure>
+<p>此时配置基本完成，可以把这些配置文件使用<code>scp</code>命令拷贝到其他主机：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ scp etc/hadoop/* shimin@ubuntu1:/usr/local/hadoop-<span class="number">2.7</span>.<span class="number">3</span>/etc/hadoop/</div><div class="line">$ scp etc/hadoop/* shimin@ubuntu2:/usr/local/hadoop-<span class="number">2.7</span>.<span class="number">3</span>/etc/hadoop/</div></pre></td></tr></table></figure>
+<h1 id="启动hdfs集群"><a href="#启动hdfs集群" class="headerlink" title="启动hdfs集群"></a>启动hdfs集群</h1><h2 id="启动journalnode"><a href="#启动journalnode" class="headerlink" title="启动journalnode"></a>启动journalnode</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 在每台主机上执行下面的命令</span></div><div class="line">$ cd /usr/local/hadoop-<span class="number">2.7</span>.<span class="number">3</span></div><div class="line">$ sbin/hadoop-daemon.sh start journalnode</div></pre></td></tr></table></figure>
+<h2 id="namenode初始化"><a href="#namenode初始化" class="headerlink" title="namenode初始化"></a>namenode初始化</h2><p>namenode在ubuntu和ubuntu1上，暂且在ubuntu1上使用该命令。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ bin/hdfs namenode -format</div></pre></td></tr></table></figure>
+<p>此时只有ubuntu1上有相应的元数据信息，ubuntu上需要拷贝相应的信息才能作为备份。</p>
+<p>按照以下命令设置：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 在ubuntu1机器上都启动namenode</span></div><div class="line">$ sbin/hadoop-daemon.sh start namenode</div><div class="line"><span class="comment"># 在需要备份的ubuntu上执行拷贝过程</span></div><div class="line">$ bin/hdfs namenode -bootstrapStandby</div></pre></td></tr></table></figure>
+<p>至此，两个namenode互为备份成功。</p>
+<h2 id="zkfc初始化"><a href="#zkfc初始化" class="headerlink" title="zkfc初始化"></a>zkfc初始化</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 在其中一个namenode结点上执行下面这条命令</span></div><div class="line">$ bin/hdfs zkfc -formatZK</div></pre></td></tr></table></figure>
+<h2 id="启动hdfs集群-1"><a href="#启动hdfs集群-1" class="headerlink" title="启动hdfs集群"></a>启动hdfs集群</h2><figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sbin/start-dfs.sh</div></pre></td></tr></table></figure>
+<p>可以在<a href="http://192.168.64.137:50070" target="_blank" rel="external">http://192.168.64.137:50070</a>和<a href="http://192.168.64.138:50070" target="_blank" rel="external">http://192.168.64.138:50070</a>看到namenode情况，一个是active一个是standby。</p>
+<h1 id="配置hadoop-yarn相关文件"><a href="#配置hadoop-yarn相关文件" class="headerlink" title="配置hadoop-yarn相关文件"></a>配置hadoop-yarn相关文件</h1><p>同样的在<code>/usr/local/hadoop-2.7.3/etc/hadoop</code>目录下，配置<code>mapred-site.xml</code>文件：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.framework.name<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">value</span>&gt;</span>yarn<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>配置<code>yarn-site.xml</code>文件：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></div><div class="line"></div><div class="line"><span class="comment">&lt;!-- Site specific YARN configuration properties --&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.hostname<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">value</span>&gt;</span>ubuntu<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.aux-services<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">value</span>&gt;</span>mapreduce_shuffle<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">property</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.aux-services.mapreduce.shuffle.class<span class="tag">&lt;/<span class="name">name</span>&gt;</span></div><div class="line">                <span class="tag">&lt;<span class="name">value</span>&gt;</span>org.apache.hadoop.mapred.ShuffleHandler<span class="tag">&lt;/<span class="name">value</span>&gt;</span></div><div class="line">         <span class="tag">&lt;/<span class="name">property</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></div></pre></td></tr></table></figure>
+<h1 id="启动yarn"><a href="#启动yarn" class="headerlink" title="启动yarn"></a>启动yarn</h1><figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 最好在设置为master的那个节点上启动yarn，对于本例来讲，是在ubuntu主机上</span></div><div class="line">$ sbin/start-yarn.sh</div><div class="line"><span class="comment"># 在其它主机上使用这个命令看似只启动了namemanager，没有启动resourcemanager。</span></div><div class="line"><span class="comment"># 如果在ubuntu上手动启动resourcemanager也能正常工作。</span></div></pre></td></tr></table></figure>
+<p>可以在相应的地址上看到yarn集群的状态，可以看到有3个nodemanager连接上了。</p>
+<h1 id="运行官方示例"><a href="#运行官方示例" class="headerlink" title="运行官方示例"></a>运行官方示例</h1><h2 id="Word-Count"><a href="#Word-Count" class="headerlink" title="Word Count"></a>Word Count</h2><p>WordCount是hadoop官方提供的示例程序，我在网上找到一份中文的文档，里面有源码的解读，可参考mapred-tutorial。在这里可以了解以下map-reduce的原理和机制。</p>
+<p>运行官方的例子则相对简单，在我们下载的hadoop包里，即目录/usr/local/hadoop/hadooop-2.7.3/share/hadoop/mapreduce/有一个jar包hadoop-mapreduce-examples-2.7.3.jar打包的就是官方的示例，可以直接提交给hadoop集群运行。</p>
+<p>以wordcount为例，首先准备程序的输入，在hdfs中创建文件夹以及创建输入文件，输入以下命令：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ cd /usr/local/hadoop/hadoop-<span class="number">2.7</span>.<span class="number">3</span></div><div class="line">$ mkdir input (存放临时输入文件)</div><div class="line">$ echo -e Hello World Bye World &gt; input/file01.txt</div><div class="line">$ echo -e Hello Hadoop Goodbye Hadoop &gt; input/file02.txt</div><div class="line">$ bin/hdfs dfs -mkdir -p /wordcount/input</div><div class="line">$ bin/hdfs dfs -put input/file01.txt /wordcount/input/</div><div class="line">$ bin/hdfs dfs -put input/file02.txt /wordcount/input/</div></pre></td></tr></table></figure>
+<p>至此，输入文件已经准备好了，可以提交wordcount程序给hadoop集群运行了。命令如下：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ bin/hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-<span class="number">2.7</span>.<span class="number">3</span>.jar wordcount /wordcount/input/ /wordcount/output/</div></pre></td></tr></table></figure>
+<p>查看输出的结果是：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ bin/hdfs dfs -cat /wordcount/output/part-r-<span class="number">00000</span></div><div class="line">Bye <span class="number">1</span></div><div class="line">GoodBye <span class="number">1</span></div><div class="line">Hadoop <span class="number">2</span></div><div class="line">Hello <span class="number">2</span></div><div class="line">World <span class="number">2</span></div></pre></td></tr></table></figure>
+<h2 id="PI计算"><a href="#PI计算" class="headerlink" title="PI计算"></a>PI计算</h2><p>PI计算同理，但是PI计算不需要准备输入文件，命令如下：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ bin/hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-<span class="number">2.7</span>.<span class="number">3</span>.jar pi <span class="number">100</span> <span class="number">10000</span></div></pre></td></tr></table></figure>
+<p><strong>NOTE</strong>：</p>
+<blockquote>
+<p>需要注意的是在/etc/hosts文件中，ubuntu中有一行 127.0.1.1 hostname的配置。这一行最好删掉，否则会影响一些服务的监听。</p>
+<p>另外可以使用 telnet ip port的命令来判断某个端口是否开放。</p>
+</blockquote>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/hadoop/" rel="tag"># hadoop</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/01/spark-standalone-mode-and-run-pi-example/" rel="next" title="Spark Standalone">
+                <i class="fa fa-chevron-left"></i> Spark Standalone
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="shimin" />
+          <p class="site-author-name" itemprop="name">shimin</p>
+           
+              <p class="site-description motion-element" itemprop="description">just go</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#环境"><span class="nav-number">1.</span> <span class="nav-text">环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装java"><span class="nav-number">2.</span> <span class="nav-text">安装java</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#主机间免密码登录"><span class="nav-number">3.</span> <span class="nav-text">主机间免密码登录</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#zookeeper安装"><span class="nav-number">4.</span> <span class="nav-text">zookeeper安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装hadoop"><span class="nav-number">5.</span> <span class="nav-text">安装hadoop</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置hadoop-hdfs相关集群文件"><span class="nav-number">6.</span> <span class="nav-text">配置hadoop-hdfs相关集群文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#启动hdfs集群"><span class="nav-number">7.</span> <span class="nav-text">启动hdfs集群</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#启动journalnode"><span class="nav-number">7.1.</span> <span class="nav-text">启动journalnode</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#namenode初始化"><span class="nav-number">7.2.</span> <span class="nav-text">namenode初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#zkfc初始化"><span class="nav-number">7.3.</span> <span class="nav-text">zkfc初始化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动hdfs集群-1"><span class="nav-number">7.4.</span> <span class="nav-text">启动hdfs集群</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置hadoop-yarn相关文件"><span class="nav-number">8.</span> <span class="nav-text">配置hadoop-yarn相关文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#启动yarn"><span class="nav-number">9.</span> <span class="nav-text">启动yarn</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#运行官方示例"><span class="nav-number">10.</span> <span class="nav-text">运行官方示例</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Word-Count"><span class="nav-number">10.1.</span> <span class="nav-text">Word Count</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PI计算"><span class="nav-number">10.2.</span> <span class="nav-text">PI计算</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">shimin</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("jvjJIlvKFl4uSzxJH3nJT6Bw-gzGzoHsz", "nqn1wmWggHukpY1GuMFlbDsG");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
