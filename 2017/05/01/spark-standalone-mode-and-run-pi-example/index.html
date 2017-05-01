@@ -97,7 +97,7 @@
 <meta property="og:url" content="https://shminjs.github.io/2017/05/01/spark-standalone-mode-and-run-pi-example/index.html">
 <meta property="og:site_name" content="shimin's blog">
 <meta property="og:description" content="这篇博客主要讲的是Spark Standalone的部署。写成博客的形式也是笔记的一种形式，以后再次配置时可以借鉴这篇博客，不必再走弯路。">
-<meta property="og:updated_time" content="2017-05-01T06:46:39.328Z">
+<meta property="og:updated_time" content="2017-05-01T07:18:38.250Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spark Standalone">
 <meta name="twitter:description" content="这篇博客主要讲的是Spark Standalone的部署。写成博客的形式也是笔记的一种形式，以后再次配置时可以借鉴这篇博客，不必再走弯路。">
@@ -343,15 +343,14 @@
 <p>ubuntu1: 192.168.64.138</p>
 <p>ubuntu2: 192.168.64.139</p>
 <p>spark版本为：spark-2.1.0-bin-hadoop2.7.tgz</p>
-<p>hadoop版本为：hadoop-2.8.0</p>
 </blockquote>
-<h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><p>hadoop之前已经配置好了，具体的可以参考<a href="http://www.shminjs.top/2017/02/22/hadoop-setup-and-run-some-native-example-on-it/" target="_blank" rel="external">hadoop集群配置</a>。这里主要配置Spark Standalone。首先将所需要的Spark软件拷贝至各个ubuntu主机上。并且解压，将解压后的文件夹移至<code>/usr/local/</code>目录下(放在任何地方均可，我这里属于个人偏好)，每个主机都需要完成这一步骤。</p>
+<h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><p>这里主要配置Spark Standalone，因此hadoop无关紧要。首先将所需要的Spark软件拷贝至各个ubuntu主机上。并且解压，将解压后的文件夹移至<code>/usr/local/</code>目录下(放在任何地方均可，我这里属于个人偏好)，每个主机都需要完成这一步骤。</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sudo mv spark-<span class="number">2.1</span>.<span class="number">0</span>-bin-hadoop2.<span class="number">7</span>/ /usr/local/</div></pre></td></tr></table></figure>
 <h1 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h1><p>下面以主机名为ubuntu的主机为例，配置必要的文件，配置好的文件可以通过scp命令拷贝到其它主机。</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 首先进入spark目录</span></div><div class="line">$ cd /usr/local/spark-<span class="number">2.1</span>.<span class="number">0</span>-bin-hadoop2.<span class="number">7</span>/</div></pre></td></tr></table></figure>
 <p><code>spark</code>的配置文件都在conf子目录下，进入该子目录，准备配置<code>spark-env.sh</code>：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ cd conf</div><div class="line">$ cp spark-env.sh.template spark-env.sh</div><div class="line">$ vim spark-env.sh</div><div class="line">export JAVA_HOME=/usr/lib/jvm/java-<span class="number">8</span>-oracle</div><div class="line">export SPARK_MASTER=ubuntu</div><div class="line">export SPARK_MASTER_PORT=<span class="number">7077</span></div><div class="line">export SPARK_WORKER_CORES=<span class="number">1</span></div><div class="line">export SPARK_WORKER_INSTANCES=<span class="number">1</span></div><div class="line">export SPARK_WORKER_MEMORY=<span class="number">1</span>g</div></pre></td></tr></table></figure>
-<p>修改<code>slaves</code>文件，添加可以作为WORKER结点的主机名，在这里，我把三个结点都作为WORKER结点。</p>
+<p>修改<code>slaves</code>文件，添加可以作为worker结点的主机名，在这里，我把三个结点都作为worker结点。</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ cp slaves.templates slaves</div><div class="line">$ vim slaves</div><div class="line">ubuntu</div><div class="line">ubuntu1</div><div class="line">ubuntu2</div></pre></td></tr></table></figure>
 <p>把配置文件拷贝到其它结点：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 把当前目录的所有文件拷贝到其它主机的相同目录下</span></div><div class="line">$ scp * shimin@ubuntu1:/usr/local/spark-<span class="number">2.1</span>.<span class="number">0</span>-bin-hadoop2.<span class="number">7</span>/conf/</div><div class="line">$ scp * shimin@ubuntu2:/usr/local/spark-<span class="number">2.1</span>.<span class="number">0</span>-bin-hadoop2.<span class="number">7</span>/conf/</div></pre></td></tr></table></figure>
@@ -403,6 +402,10 @@
       
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/01/spark-standalone-mode-with-ha/" rel="next" title="Spark Standalone + HA">
+                <i class="fa fa-chevron-left"></i> Spark Standalone + HA
+              </a>
             
           </div>
 
@@ -484,7 +487,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-count">3</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

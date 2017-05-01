@@ -74,7 +74,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="spark," />
 
 
 
@@ -90,15 +90,17 @@
 
 
 
-<meta name="description" content="just go">
-<meta property="og:type" content="website">
-<meta property="og:title" content="shimin's blog">
-<meta property="og:url" content="https://shminjs.github.io/archives/2017/index.html">
+<meta name="description" content="在标准的Spark Standalone模式中，master结点只有一个，存在单点故障。因此Spark官方提供了两种方法来实现HA。在这里，我们主要讲第一种方式，即通过Zokeeper自动切换的方式。">
+<meta name="keywords" content="spark">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spark Standalone + HA">
+<meta property="og:url" content="https://shminjs.github.io/2017/05/01/spark-standalone-mode-with-ha/index.html">
 <meta property="og:site_name" content="shimin's blog">
-<meta property="og:description" content="just go">
+<meta property="og:description" content="在标准的Spark Standalone模式中，master结点只有一个，存在单点故障。因此Spark官方提供了两种方法来实现HA。在这里，我们主要讲第一种方式，即通过Zokeeper自动切换的方式。">
+<meta property="og:updated_time" content="2017-05-01T07:47:44.584Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="shimin's blog">
-<meta name="twitter:description" content="just go">
+<meta name="twitter:title" content="Spark Standalone + HA">
+<meta name="twitter:description" content="在标准的Spark Standalone模式中，master结点只有一个，存在单点故障。因此Spark官方提供了两种方法来实现HA。在这里，我们主要讲第一种方式，即通过Zokeeper自动切换的方式。">
 
 
 
@@ -126,13 +128,13 @@
 
 
 
-  <link rel="canonical" href="https://shminjs.github.io/archives/2017/"/>
+  <link rel="canonical" href="https://shminjs.github.io/2017/05/01/spark-standalone-mode-with-ha/"/>
 
 
 
 
 
-  <title>归档 | shimin's blog</title>
+  <title>Spark Standalone + HA | shimin's blog</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -157,7 +159,7 @@
     
   
 
-  <div class="container sidebar-position-left  page-archive  ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -241,140 +243,185 @@
           <div id="content" class="content">
             
 
-  <section id="posts" class="posts-collapse">
-    <span class="archive-move-on"></span>
-
-    <span class="archive-page-counter">
-      
-      
-      
-        
-      
-      嗯..! 目前共计 3 篇日志。 继续努力。
-    </span>
-
+  <div id="posts" class="posts-expand">
     
-
-      
-      
-      
-
-      
-        
-        <div class="collection-title">
-          <h2 class="archive-year motion-element" id="archive-year-2017">2017</h2>
-        </div>
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2017/05/01/spark-standalone-mode-with-ha/" itemprop="url">
-              
-                <span itemprop="name">Spark Standalone + HA</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-05-01T15:07:00+08:00"
-              content="2017-05-01" >
-          05-01
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2017/05/01/spark-standalone-mode-and-run-pi-example/" itemprop="url">
-              
-                <span itemprop="name">Spark Standalone</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-05-01T13:17:00+08:00"
-              content="2017-05-01" >
-          05-01
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2017/02/22/hadoop-setup-and-run-some-native-example-on-it/" itemprop="url">
-              
-                <span itemprop="name">Hadoop集群配置以及运行官方示例</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-02-22T20:46:25+08:00"
-              content="2017-02-22" >
-          02-22
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-  </section>
 
   
 
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://shminjs.github.io/2017/05/01/spark-standalone-mode-with-ha/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="shimin">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="shimin's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Spark Standalone + HA
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-01T15:07:00+08:00">
+                2017-05-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/05/01/spark-standalone-mode-with-ha/" class="leancloud_visitors" data-flag-title="Spark Standalone + HA">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在标准的Spark Standalone模式中，master结点只有一个，存在单点故障。因此Spark官方提供了两种方法来实现<a href="http://spark.apache.org/docs/latest/spark-standalone.html#high-availability" target="_blank" rel="external">HA</a>。在这里，我们主要讲第一种方式，即通过Zokeeper自动切换的方式。</p>
+<a id="more"></a>
+<h1 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h1><blockquote>
+<p>ubuntu server 16.04 TLS</p>
+<p>ubuntu: 192.168.64.137</p>
+<p>ubuntu1: 192.168.64.138</p>
+<p>ubuntu2: 192.168.64.139</p>
+<p>spark版本为：spark-2.1.0-bin-hadoop2.7.tgz</p>
+</blockquote>
+<h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><p>前面的配置可以参考之前的一篇博客<a href="http://www.shminjs.top/2017/05/01/spark-standalone-mode-and-run-pi-example/" target="_blank" rel="external">Spark Standalone</a>，HA的配置是在这篇博客的基础之上的。</p>
+<h1 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h1><p>首先配置<code>spark-env.sh</code>文件，如下，添加几行配置：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ vim spark-env.sh</div><div class="line">export SPARK_DAEMON_JAVA_OPTS=<span class="string">"-Dspark.deploy.recoveryMode=ZOOKEEPER -Dspark.deploy.zookeeper.url=ubuntu:2181,ubuntu1:2181,ubuntu2:2181"</span></div><div class="line"></div><div class="line"><span class="comment"># 保存退出</span></div></pre></td></tr></table></figure>
+<p>拷贝<code>spark-env.sh</code>到其它主机的对应目录：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ scp spark-env.sh shimin@ubuntu1:/usr/local/spark-<span class="number">2.1</span>.<span class="number">0</span>-bin-hadoop2.<span class="number">7</span>.tgz/conf/</div><div class="line">$ scp spark-env.sh shimin@ubuntu2:/usr/local/spark-<span class="number">2.1</span>.<span class="number">0</span>-bin-hadoop2.<span class="number">7</span>.tgz/conf/</div></pre></td></tr></table></figure>
+<h1 id="启动zookeeper"><a href="#启动zookeeper" class="headerlink" title="启动zookeeper"></a>启动zookeeper</h1><p>前提是安装好了zookeeper并配置好了相应的路径，配置方式可参考官方教程。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 在三台机器上分别执行以下命令</span></div><div class="line">$ zkServer.sh start</div></pre></td></tr></table></figure>
+<h1 id="启动Spark集群"><a href="#启动Spark集群" class="headerlink" title="启动Spark集群"></a>启动Spark集群</h1><figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sbin/start-all.sh			<span class="comment"># 在spark目录下</span></div></pre></td></tr></table></figure>
+<p>此时仍然只有一个master结点，如果需要启动备份master，比如我要在ubuntu1的主机上启动一个备份master，输入以下命令即可：</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sbin/start-master.sh</div></pre></td></tr></table></figure>
+<p>此时浏览器中可以访问<a href="http://192.168.64.137:8080和http://192.168.64.138:8080可以看到一个master处于active一个master处于standby。此时如果在ubuntu主机上kill掉该机器上的master进程，经过1-2分钟可以看到Ubuntu1主机已经处于active状态。" target="_blank" rel="external">http://192.168.64.137:8080和http://192.168.64.138:8080可以看到一个master处于active一个master处于standby。此时如果在ubuntu主机上kill掉该机器上的master进程，经过1-2分钟可以看到Ubuntu1主机已经处于active状态。</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/spark/" rel="tag"># spark</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/01/spark-standalone-mode-and-run-pi-example/" rel="prev" title="Spark Standalone">
+                Spark Standalone <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -382,6 +429,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -401,8 +452,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -455,6 +515,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#环境"><span class="nav-number">1.</span> <span class="nav-text">环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#准备工作"><span class="nav-number">2.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置文件"><span class="nav-number">3.</span> <span class="nav-text">配置文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#启动zookeeper"><span class="nav-number">4.</span> <span class="nav-text">启动zookeeper</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#启动Spark集群"><span class="nav-number">5.</span> <span class="nav-text">启动Spark集群</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -573,11 +649,9 @@
   
 
   
-  
-    <script type="text/javascript" id="motion.page.archive">
-      $('.archive-year').velocity('transition.slideLeftIn');
-    </script>
-  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
 
 
   
