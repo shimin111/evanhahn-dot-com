@@ -97,7 +97,7 @@
 <meta property="og:url" content="https://shminjs.github.io/2017/05/01/spark-standalone-mode-with-ha/index.html">
 <meta property="og:site_name" content="shimin's blog">
 <meta property="og:description" content="在标准的Spark Standalone模式中，master结点只有一个，存在单点故障。因此Spark官方提供了两种方法来实现HA。在这里，我们主要讲第一种方式，即通过Zokeeper自动切换的方式。">
-<meta property="og:updated_time" content="2017-05-01T07:47:44.584Z">
+<meta property="og:updated_time" content="2017-05-01T07:50:44.636Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spark Standalone + HA">
 <meta name="twitter:description" content="在标准的Spark Standalone模式中，master结点只有一个，存在单点故障。因此Spark官方提供了两种方法来实现HA。在这里，我们主要讲第一种方式，即通过Zokeeper自动切换的方式。">
@@ -354,7 +354,7 @@
 <h1 id="启动Spark集群"><a href="#启动Spark集群" class="headerlink" title="启动Spark集群"></a>启动Spark集群</h1><figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sbin/start-all.sh			<span class="comment"># 在spark目录下</span></div></pre></td></tr></table></figure>
 <p>此时仍然只有一个master结点，如果需要启动备份master，比如我要在ubuntu1的主机上启动一个备份master，输入以下命令即可：</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ sbin/start-master.sh</div></pre></td></tr></table></figure>
-<p>此时浏览器中可以访问<a href="http://192.168.64.137:8080和http://192.168.64.138:8080可以看到一个master处于active一个master处于standby。此时如果在ubuntu主机上kill掉该机器上的master进程，经过1-2分钟可以看到Ubuntu1主机已经处于active状态。" target="_blank" rel="external">http://192.168.64.137:8080和http://192.168.64.138:8080可以看到一个master处于active一个master处于standby。此时如果在ubuntu主机上kill掉该机器上的master进程，经过1-2分钟可以看到Ubuntu1主机已经处于active状态。</a></p>
+<p>此时浏览器中可以访问[<a href="http://192.168.64.137:8080]和[http://192.168.64.138:8080]可以看到一个master处于active一个master处于standby。此时如果在ubuntu主机上kill掉该机器上的master进程，经过1-2分钟可以看到Ubuntu1主机已经处于active状态。" target="_blank" rel="external">http://192.168.64.137:8080]和[http://192.168.64.138:8080]可以看到一个master处于active一个master处于standby。此时如果在ubuntu主机上kill掉该机器上的master进程，经过1-2分钟可以看到Ubuntu1主机已经处于active状态。</a></p>
 
       
     </div>
